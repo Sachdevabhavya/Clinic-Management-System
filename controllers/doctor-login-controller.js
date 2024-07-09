@@ -45,10 +45,8 @@ const login = async (req, res, next) => {
 const signUp = async (req, res, next) => {
   const { name, phone_no, email, password, Hname } = req.body;
 
-  // Log the entire request body to debug the issue
   console.log("Request Body:", req.body);
 
-  // Check if all required fields are provided
   if (!name || !phone_no || !email || !password || !Hname) {
     console.log("Missing fields:", {
       name: !!name,
@@ -70,7 +68,6 @@ const signUp = async (req, res, next) => {
       });
     }
 
-    // Log the password to ensure it's being received (Do not do this in production!)
     console.log(`Received password: ${password}`);
 
     const hashedPassword = bcrypt.hashSync(password);
@@ -81,7 +78,7 @@ const signUp = async (req, res, next) => {
       email,
       password: hashedPassword,
       Hname,
-      image: req.file ? req.file.filename : null, // If using multer for file uploads
+      image: req.file ? req.file.filename : null, 
     });
 
     const qrCodeFilePath = await generateQrCode(name, Hname);
