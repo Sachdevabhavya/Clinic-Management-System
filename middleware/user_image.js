@@ -1,14 +1,15 @@
 const multer = require("multer");
 const path = require("path");
 
-const user_img_dir = path.join(__dirname, "../user_images/");
+const user_img_dir = path.join(__dirname, "../user_images");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, user_img_dir);
   },
   filename: (req, file, cb) => {
-    const fileName = `${req.body.name}-${req.body.email}`;
+    const ext = path.extname(file.originalname);
+    const fileName = `${req.body.name}-${req.body.email}${ext}`;
     cb(null, fileName);
   },
 });
