@@ -31,7 +31,21 @@ const getAllAppointments = async (req, res) => {
 
 const createAppointment = async (req, res) => {
   const { patient_name, age, description, phone_no, home_address } = req.body;
-  
+
+  console.log("Request Body:", req.body);
+
+  // Check if all required fields are provided
+  if (!patient_name || !age || !description || !phone_no || !home_address) {
+    console.log("Missing fields:", {
+      patient_name: !!patient_name,
+      age: !!age,
+      description: !!description,
+      phone_no: !!phone_no,
+      home_address: !!home_address,
+    });
+    return res.status(400).json({ message: "All fields must be provided." });
+  }
+
   try {
     const newAppointment = new book_appointment({
       patient_name,
@@ -44,6 +58,7 @@ const createAppointment = async (req, res) => {
     const savedAppointment = await newAppointment.save();
 
     console.log(`Appointment created:\n ${savedAppointment}`);
+    console.log(`Appointment created with id : ${savedAppointment._id}`)
 
     return res.status(201).json({ message: "Appointment Created Successfully", appointment: savedAppointment });
   } catch (error) {
@@ -53,9 +68,10 @@ const createAppointment = async (req, res) => {
 };
 
 const getAppointmentById = async (req, res) => {
-  const appointment_id = req.params.appointment_id;
+  const appointmentId = req.params.appointmentId;
+  console.log("Received Appointment ID:", appointmentId);
   try {
-    const appointment = await book_appointment.findById(appointment_id);
+    const appointment = await book_appointment.findById(appointmentId);
 
     if (!appointment) {
       return res.status(404).json({ message: "Appointment Not Found" });
