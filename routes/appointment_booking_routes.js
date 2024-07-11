@@ -5,6 +5,6 @@ const appointment_router = express.Router();
 
 appointment_router.get("/doctor_login/:loginId/appointments", appointment_control.getAllAppointments);
 appointment_router.get("/doctor_login/:loginId/appointments/:appointmentId", appointment_control.getAppointmentById);
-appointment_router.post("/user_login/:loginId/create_appointment", appointment_control.createAppointment);
+appointment_router.post("/patient_login/:loginId/create_appointment", appointment_control.createAppointment);
 
 module.exports = appointment_router;
