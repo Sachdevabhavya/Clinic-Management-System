@@ -1,6 +1,8 @@
 const book_appointment = require("../model/appointment_booking");
 const doctors_list = require("../model/doctor_login")
 
+
+//get all appointments
 const getAllAppointments = async (req, res) => {
   const loginId = req.params.loginId
   try {
@@ -29,12 +31,12 @@ const getAllAppointments = async (req, res) => {
   }
 };
 
+//create appointment
 const createAppointment = async (req, res) => {
   const { patient_name, age, description, phone_no, home_address } = req.body;
 
   console.log("Request Body:", req.body);
 
-  // Check if all required fields are provided
   if (!patient_name || !age || !description || !phone_no || !home_address) {
     console.log("Missing fields:", {
       patient_name: !!patient_name,
@@ -67,6 +69,8 @@ const createAppointment = async (req, res) => {
   }
 };
 
+
+//get appointment by id
 const getAppointmentById = async (req, res) => {
   const appointmentId = req.params.appointmentId;
   console.log("Received Appointment ID:", appointmentId);
