@@ -1,41 +1,43 @@
 const order = require("../model/order_medicine")
 const upload_img = require("../middleware/prescription_image")
 
-const order_qr_code = require("../middleware/order_qrcode")
+const {generateQrCode} = require("../middleware/order_qrcode")
 
 const multer = require("multer")
 
-const placeOrder = async(req , res , next) =>{
-    const {pname ,home_address, hname, phone_no, email_id, medicines, order_prescription_qrcode } = req.body;
+//create order
+const placeOrder = async (req, res, next) => {
+  const { pname, home_address, hname, phone_no, email_id, medicines } = req.body;
 
-    if (!home_address || !hname || !phone_no || !email_id || !medicines) {
-        return res.status(400).json({ message: 'All required fields must be provided.' });
-    }
+  if (!home_address || !hname || !phone_no || !email_id || !medicines) {
+    return res.status(400).json({ message: 'All required fields must be provided.' });
+  }
 
-    try {
-        const newOrder = new order({
-            pname,
-            home_address,
-            hname,
-            phone_no,
-            email_id,
-            medicines,
-            order_prescription_qrcode,
-            prescrption: req.file ? req.file.filename : null
-        });
+  try {
+    const newOrder = new order({
+      pname,
+      home_address,
+      hname,
+      phone_no,
+      email_id,
+      medicine: medicines,
+      prescription: req.file ? req.file.filename : null
+    });
 
-        const qrCodeFilePath = await order_qr_code.generateQrCode(req.body.pname,req.body.phone_no,req.body.emailId , req.body.medicines);
-        newOrder.qrcode = qrCodeFilePath
+    const qrCodeFilePath = await generateQrCode(pname, phone_no, email_id, medicines);
 
-        await newOrder.save();
+    const savedOrder = await newOrder.save();
 
-        res.status(201).json({ message: 'Order placed successfully', order: newOrder });
-    } catch (error) {
-        res.status(500).json({ message: 'Error placing order', error });
-    }
-}
+    console.log(`Order created: ${savedOrder}`);
+    console.log(`Order created with id: ${savedOrder._id}`);
 
+    res.status(201).json({ message: 'Order placed successfully', order: savedOrder });
+  } catch (error) {
+    res.status(500).json({ message: 'Error placing order', error });
+  }
+};
 
+//get all orders
 const getAllOrders = async (req, res) =>{
     try {
         const orders = await order.find();
@@ -53,9 +55,10 @@ const getAllOrders = async (req, res) =>{
       }
 }
 
+//prescription image upload
 const UploadImgMiddleware = (req, res, next) => {
     const upload = upload_img.store_image(req.body.pname);
-    upload.single("image")(req, res, function (err) {
+    upload.single("prescription")(req, res, function (err) {
       if (err instanceof multer.MulterError) {
         return res.status(500).json({ message: err.message });
       } else if (err) {
@@ -66,9 +69,9 @@ const UploadImgMiddleware = (req, res, next) => {
     });
   };
 
-
+//get order by id 
 const getOrderById = async (req, res) => {
-  const orderId = req.params.order_id;
+  const orderId = req.params.orderId;
   try {
     const get_order = await order.findById(orderId);
 
@@ -76,6 +79,8 @@ const getOrderById = async (req, res) => {
       return res.status(404).json({ message: "Order Not Found" });
     }
 
+    console.log(`Order Id fetched : ${orderId}`)
+    console.log(`Order Fetched with above id :${get_order}`)
     return res.status(200).json({ get_order });
   } catch (error) {
     console.log(error);
