@@ -45,7 +45,6 @@ const order_medicines = mongoose.Schema(
 
         prescription : {
             type : String,
-            required : true
         },
 
         qrcode : {
