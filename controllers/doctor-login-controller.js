@@ -5,7 +5,7 @@ const multer = require("multer");
 
 const { generateQrCode } = require("../middleware/doctor_qrcode");
 
-
+//doctor login
 const login = async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -48,13 +48,6 @@ const signUp = async (req, res, next) => {
   console.log("Request Body:", req.body);
 
   if (!name || !phone_no || !email || !password || !Hname) {
-    console.log("Missing fields:", {
-      name: !!name,
-      phone_no: !!phone_no,
-      email: !!email,
-      password: !!password,
-      Hname: !!Hname,
-    });
     return res.status(400).json({ message: "All fields must be provided." });
   }
 
@@ -78,7 +71,7 @@ const signUp = async (req, res, next) => {
       email,
       password: hashedPassword,
       Hname,
-      image: req.file ? req.file.filename : null, 
+      doctor_image: req.file ? req.file.filename : null, 
     });
 
     const qrCodeFilePath = await generateQrCode(name, Hname);
@@ -95,6 +88,7 @@ const signUp = async (req, res, next) => {
   }
 };
 
+//doctor image upload
 const UploadImgMiddleware = (req, res, next) => {
   const upload = upload_img.store_image(req.body.name);
   upload.single("image")(req, res, function (err) {
@@ -107,7 +101,6 @@ const UploadImgMiddleware = (req, res, next) => {
     next();
   });
 };
-
 
 
 module.exports = {
