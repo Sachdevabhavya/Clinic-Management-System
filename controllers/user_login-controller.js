@@ -5,21 +5,12 @@ const multer = require("multer");
 
 const { generateQrCode } = require("../middleware/user_qrcode");
 
+
+//user signin
 const signUp = async (req, res, next) => {
   const { name, phone_no, email, password, hname } = req.body;
 
-  // Log the entire request body to debug the issue
-  console.log("Request Body:", req.body);
-
-  // Check if all required fields are provided
   if (!name || !phone_no || !email || !password || !hname) {
-    console.log("Missing fields:", {
-      name: !!name,
-      phone_no: !!phone_no,
-      email: !!email,
-      password: !!password,
-      hname: !!hname,
-    });
     return res.status(400).json({ message: "All fields must be provided." });
   }
 
@@ -44,7 +35,7 @@ const signUp = async (req, res, next) => {
       email,
       password: hashedPassword,
       hname,
-      image: req.file ? req.file.filename : null, 
+      user_image: req.file ? req.file.filename : null, 
     });
 
     
@@ -60,6 +51,8 @@ const signUp = async (req, res, next) => {
   }
 };
 
+
+//user image upload
 const UploadImgMiddleware = (req, res, next) => {
   const upload = upload_img.store_image(req.body.name);
   upload.single("image")(req, res, function (err) {
@@ -73,6 +66,7 @@ const UploadImgMiddleware = (req, res, next) => {
   });
 };
 
+//user login
 const login = async (req, res, next) => {
   const { email, password } = req.body;
 
