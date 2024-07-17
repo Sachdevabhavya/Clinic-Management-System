@@ -17,11 +17,15 @@ git clone https://github.com/Sachdevabhavya/Clinic-Management-System.git
 
 # Setup environment
 
+Run the given below command to start the npm environment , and generate package.json file
+
 ```bash
 npm init
 ```
 
 # Install the dependencies
+
+Use the below command to install required npm dependencies , for eg if u want to install init , then run npm i init
 
 ```bash
 npm i "dependency name"
@@ -29,11 +33,20 @@ npm i "dependency name"
 
 # Add Scripts
 
+Add this to the package.json file , to run the server.
+
 ```JSON
 "dev" : "nodemon app.js"
 ```
 
+# Run server
+
+```bash
+npm run dev
+```
+
 # Dependencies Used
+Install the following dependencies :
 
 1. bcryptjs
 2. dotenv
