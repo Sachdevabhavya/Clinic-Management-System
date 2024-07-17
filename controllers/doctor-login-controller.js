@@ -41,7 +41,7 @@ const login = async (req, res, next) => {
   }
 };
 
-// doctor signin
+// doctor signup
 const signUp = async (req, res, next) => {
   const { name, phone_no, email, password, Hname } = req.body;
 
