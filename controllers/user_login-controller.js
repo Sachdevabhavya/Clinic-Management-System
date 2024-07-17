@@ -6,7 +6,7 @@ const multer = require("multer");
 const { generateQrCode } = require("../middleware/user_qrcode");
 
 
-//user signin
+//user signup
 const signUp = async (req, res, next) => {
   const { name, phone_no, email, password, hname } = req.body;
 
@@ -24,7 +24,6 @@ const signUp = async (req, res, next) => {
       });
     }
 
-    // Log the password to ensure it's being received (Do not do this in production!)
     console.log(`Received password: ${password}`);
 
     const hashedPassword = bcrypt.hashSync(password);
